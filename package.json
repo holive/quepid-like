@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "start": "node app.js"
+  },
   "dependencies": {
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
@@ -6,7 +9,8 @@
     "express": "^4.16.4",
     "express-ejs-layouts": "^2.5.0",
     "mongoose": "^5.4.15",
-    "mustache-express": "^1.2.8"
+    "mustache-express": "^1.2.8",
+    "node-fetch": "^2.6.0"
   },
   "devDependencies": {
     "nodemon": "^1.18.10"
