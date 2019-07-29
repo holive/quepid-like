@@ -63,8 +63,21 @@ footer {
   cursor: pointer;
 }
 
+.card {
+  background-color: rgb(24, 26, 27);
+  border-top-color: rgba(102, 102, 102, 0.13);
+  border-right-color: rgba(102, 102, 102, 0.13);
+  border-bottom-color: rgba(102, 102, 102, 0.13);
+  border-left-color: rgba(102, 102, 102, 0.13);
+}
+
+.card-header {
+  background-color: #00000008;
+  border-bottom-color: #66666621;
+}
+
 .card-body {
-  background-color: #fdfdfd;
+  background-color: rgb(25, 26, 27);
 }
 
 .card-body .thumb {
@@ -102,7 +115,7 @@ footer {
 
 .btn-link {
   font-weight: 600;
-  color: #666;
+  color: #c3bfb6;
 }
 
 .btn-outline-secondary {
@@ -160,8 +173,14 @@ footer {
 .card-body .custom-select {
   min-width: 65px;
   cursor: pointer;
-  color: #fff;
   font-weight: 700;
+
+  color: #fff;
+  background-color: rgb(24, 26, 27);
+  border-top-color: rgb(54, 63, 72);
+  border-right-color: rgb(54, 63, 72);
+  border-bottom-color: rgb(54, 63, 72);
+  border-left-color: rgb(54, 63, 72);
 }
 
 .card-body .custom-select:focus {
@@ -172,19 +191,28 @@ footer {
 
 .card-header .term-score {
   padding: 0 20px;
-  color: #fff;
   width: 78px;
-  background-color: #fff;
   border-left: 1px solid #ddd;
   align-self: stretch;
+  color: rgb(255, 255, 255);
+  background-color: rgb(24, 26, 27);
+  border-left-color: rgb(90, 90, 90);
+}
+
+[data-darkreader-inline-bgcolor] {
+  background-color: var(--darkreader-inline-bgcolor) !important;
 }
 
 .card-body .change-score-all {
-  color: #999;
   width: 65px;
   cursor: pointer;
   font-weight: 700;
-  border: 1px solid #ddd;
+
+  color: rgb(186, 181, 171);
+  border-top-color: rgb(58, 58, 58);
+  border-right-color: rgb(58, 58, 58);
+  border-bottom-color: rgb(58, 58, 58);
+  border-left-color: rgb(58, 58, 58);
 }
 
 .card-body .change-score-all:focus {
@@ -203,7 +231,7 @@ footer {
   margin-bottom: 0;
   padding-left: 11px;
   font-weight: 600;
-  color: #999;
+  color: #bab5ab;
 }
 
 .terms-total-result {
