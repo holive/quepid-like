@@ -1,3 +1,5 @@
+const fetch = require('node-fetch');
+const qs = require('querystring');
 const routes = require("express").Router();
 const axios = require("axios");
 const SearchTerm = require("../models/searchTerm").SearchTerm;
@@ -145,13 +147,39 @@ const generalQuery = (terms, termsResults) => {
  * @param {Array} terms Array of terms.
  * @return {Object} A new promise.
  */
-const callMystique = terms => {
-  const url =
-    "https://mystique-v2-americanas.b2w.io/search?source=omega&limit=10";
-  const pms = [];
+const callMystique = async terms => {
+  const requests = terms.map(async ({ name: searchTerm }) => {
+    
+    const response = await fetch("https://latency-dsn.algolia.net/1/indexes/*/queries?x-algolia-application-id=latency&x-algolia-api-key=6be0576ff61c053d5f9a3225e2a90f76", {
+      "method": "POST",
+      "headers": {
+        "content-type": "application/json"
+      },
+      "body": JSON.stringify({
+        "requests": [
+          {
+            "indexName": "instant_search",
+            "params": `query=${searchTerm}`
+          }
+        ]
+      })
+    });
 
-  terms.forEach(term => pms.push(axios.get(url + "&content=" + term.name)));
-  return Promise.all(pms);
+    const body = await response.json();
+
+    return {
+      query: searchTerm,
+      hits: body.results[0].hits.map(hit => ({
+        id: hit.objectID,
+        searchTerm,
+        name: hit.name,
+        image: hit.image,
+        productID: hit.objectID,
+      })),
+    };
+  });
+
+  return Promise.all(requests);
 };
 
 /**
@@ -165,23 +193,21 @@ const registerTermsResults = async promise => {
 
   await promise.then(requests =>
     requests.forEach(request => {
-      const searchParams = new URLSearchParams(request.config.url);
-      const searchTerm = searchParams.get("content");
+      const { query, hits } = request;
 
       terms.push({
-        name: searchTerm,
-        totalResults: request.data._result.total
+        name: query,
+        totalResults: 999,
       });
 
-      request.data.products.forEach(async product => {
-        const resultID = `${product.id}_${searchTerm}`;
-        const { small, medium, big, large } = product.images[0];
+      hits.forEach(hit => {
+        const resultID = `${hit.id}_${query}`;
         const newProduct = {
           resultID,
-          searchTerm,
-          name: product.name,
-          image: small || medium || big || large || "",
-          productID: product.id
+          searchTerm: query,
+          name: hit.name,
+          image: hit.image,
+          productID: hit.id,
         };
         results.push(newProduct);
       });
