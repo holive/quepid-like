@@ -1,0 +1,97 @@
+<%- contentFor('body') %>
+<% include('../functions') %>
+
+<form class="send-term" method="POST" action="/add-term">
+  <div class="input-group mb-3">
+      <input type="text" class="form-control" placeholder="Inserir termo" id="input-term" name="input-term">
+      <div class="input-group-append">
+        <input class="btn btn-outline-secondary" type="submit" value="Enviar">
+      </div>
+    </div>
+</form>
+
+<div id="accordion">
+    <% Object.keys(results.terms).forEach(function(key, p) {  %>
+        <% const termScore = results.terms[key].score; %>
+          <div class="card">
+            <div class="card-header" id="heading<%= p %>" onclick="collapseTerm('<%= p %>')">
+              <div class="term-score" style="background-color:<%- getColor(termScore); %>">
+                <%- (termScore == 'NaN') ? '?' : termScore; %>
+              </div>
+
+              <div class="term-description">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse<%= p %>" aria-expanded="false" aria-controls="collapse<%= p %>">
+                    <%= results.terms[key].name %>
+                  </button>
+                </h5>
+
+                <div class="terms-total-result">
+                  <p><b><%= results.terms[key].totalResults %></b> Results</p>
+
+                  <%
+                    var unratedResults = results.terms[key].results.reduce((prev, current) => {
+                      if (current.hasOwnProperty('score') && current.score > 0) return prev + 1
+                    }, 0)
+                  %>
+                  <em><%= unratedResults %> Unrated Results</em>
+                </div>
+              </div>
+            </div>
+
+            <div id="collapse<%= p %>" class="collapse" aria-labelledby="heading<%= p %>" data-parent="#accordion">
+              <div class="card-body">
+                <!-- select all -->
+                <div class="card-header score-all">
+                  <div class="term-score">
+                    <select class="custom-select change-score-all" onchange="changeScoreForAll(this, 'collapse<%= p %>')">
+                      <option disabled selected> - </option>
+                      <% for (var i=1; i<=10; i++) { %>
+                        <%- `<option value="${i}">${i}</option>` %>
+                      <% } %>
+                    </select>
+                  </div>
+
+                  <p>score all</p>
+                </div>
+
+                <% results.terms[key].results.forEach(function(res, i) { %>
+                  <% const resultID = 'z' + res.resultID.replace(/ /g, 'xptoxpto'); %> <!-- create html id from mongo id -->
+
+                  <div class="card-header son">
+                    <div class="term-score">
+                      <!-- form score -->
+                      <select
+                        class="custom-select <%- resultID %>"
+                        id="<%- resultID %>"
+                        name="change-score"
+                        onchange="changeScore(this, '<%- resultID %>')"
+                        style="background-color: <%- getColor(res.score); %>"
+                      >
+                        <%- (!res.score) ? '<option disabled selected>?</option>' : '<option disabled></option>'; %>
+                        <% for (var i=1; i<=10; i++) { %>
+                          <%- (i == res.score)
+                              ? `<option selected value="${i}">${i}</option>`
+                              : `<option value="${i}">${i}</option>`;
+                          %>
+                        <% } %>
+                      </select>
+                    </div>
+
+                    <div class="thumb" style="background-image: url(<%= res.image %>)"></div>
+
+                    <h5 class="mb-0">
+                      <div class="btn btn-link term-result-name">
+                        <%= res.name %>
+                      </div>
+                    </h5>
+                  </div>
+                <%})%>
+
+              </div>
+            </div>
+          </div>
+
+    <%})%>
+
+  </div>

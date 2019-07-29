@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+    <link rel="shortcut icon" href="img/skull.ico" />
+    <title>- track search correctness</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/style.css" type="text/css" />
+  </head>
+
+  <body>
+    <header>
+      <img src="img/skull.svg" alt="Kiwi standing on oval">
+    </header>
+
+    <div class="container">
+      <%- body %>
+    </div>
+
+    <footer></footer>
+
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <script>
+
+      function collapseTerm(e) {
+        $('#collapse'+e).collapse('toggle');
+      }
+
+      // change score
+      function changeScore(e, resultID, newScore) {
+        let score = e.selectedIndex;
+        if (!score) score = newScore;
+
+        newResultID = resultID.substring(1).replace(/xptoxpto/g, ' '); // recover mongo id from html id
+
+        $.ajax({
+          url : "/change-score",
+            type: "POST",
+            data: {score, resultID: newResultID },
+            success: function (data) {
+              console.log(`score of ${newResultID} changed to ${score}`);
+              $('#'+resultID).css("background-color", getColor(score));
+            },
+            error: function (jXHR, textStatus, errorThrown) {
+              alert(errorThrown);
+            }
+        });
+      }
+
+      // change score for all results at once
+      function changeScoreForAll(e, id) {
+        const score = e.selectedIndex;
+
+        $('#'+id).find('.card-header.son').each(async (i, e) => {
+          const select = $(e).find('.custom-select');
+          select.val(score);
+          changeScore(e, select.attr('id'), score);
+        })
+
+      }
+
+      // get color
+      // duplicated in function.ejs
+      function getColor(score) {
+        let color;
+        switch (true) {
+          case (score > 0 && score < 5):
+            color = '#dc6025';
+            break;
+          case (score > 4 && score < 8):
+            color = '#dcd625';
+            break;
+          case (score > 7):
+            color = '#4adc25';
+            break;
+          default:
+            color = '#ccc';
+            break;
+        }
+        return color;
+      }
+    </script>
+  </body>
+</html>

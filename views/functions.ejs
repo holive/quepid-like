@@ -1,0 +1,21 @@
+<%
+  getColor = function (score) {
+    let color;
+    switch (true) {
+      case (score > 0 && score < 5):
+        color = '#dc6025';
+        break;
+      case (score > 4 && score < 8):
+        color = '#dcd625';
+        break;
+      case (score > 7):
+        color = '#4adc25';
+        break;
+      default:
+        color = '#ccc';
+        break;
+    }
+    return color;
+  }
+
+%>
