@@ -6,7 +6,7 @@ const SearchTerm = require("../models/searchTerm").SearchTerm;
 const SearchTermResult = require("../models/searchTermResult").SearchTermResult;
 
 routes.get("/", async (req, res) => {
-  const terms = await SearchTerm.find({});
+	const terms = await SearchTerm.find({}).limit(50);
 
   const results = await getTermsResults(terms);
   res.render("pages/home", { results });
@@ -149,7 +149,7 @@ const generalQuery = (terms, termsResults) => {
  */
 const callMystique = async terms => {
   const requests = terms.map(async ({ name: searchTerm }) => {
-    
+
     const response = await fetch("https://latency-dsn.algolia.net/1/indexes/*/queries?x-algolia-application-id=latency&x-algolia-api-key=6be0576ff61c053d5f9a3225e2a90f76", {
       "method": "POST",
       "headers": {
