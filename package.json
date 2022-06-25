@@ -10,7 +10,7 @@
     "express-ejs-layouts": "^2.5.0",
     "mongoose": "^5.4.15",
     "mustache-express": "^1.2.8",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.7"
   },
   "devDependencies": {
     "nodemon": "^1.18.10"
